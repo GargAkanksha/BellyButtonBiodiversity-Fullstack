@@ -78,7 +78,8 @@ function buildMetadata(sample) {
             "labels":response.otu_ids.slice(0,10),
             "values":response.sample_values.slice(0,10),
             "type":"pie",
-            "hoverinfo":'response.otu_labels.slice(0,10) + percent'
+            "hovertext":response.otu_labels.slice(0,10),
+            "hoverinfo":"hovertext"
           }];
           console.log(data_pie);
           var layout_pie = {
@@ -120,10 +121,6 @@ function buildMetadata(sample) {
       };
 
  };
-
-
-
-
 
 // ##############################################################################
 
