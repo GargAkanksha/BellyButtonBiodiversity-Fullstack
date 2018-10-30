@@ -1,3 +1,4 @@
+// ############# Build the initial dashboard ##################
 function init() {
   // Grab a reference to the dropdown select element
       var dropdown = d3.select("#selDataset");
@@ -20,17 +21,15 @@ function init() {
       });
 };
 
+// Fetch new data each time a new sample is selected
 function optionChanged(newSample) {
-//   // Fetch new data each time a new sample is selected
   buildCharts(parseInt(newSample));
   buildMetadata(parseInt(newSample));
 };
 
-// // Initialize the dashboard
-init();
-
 //##################################################################
-  
+// ######### Build Panel #############
+
 function buildMetadata(sample) {
     var url_meta = `/metadata/${sample}`;
     // Complete the following function that builds the metadata panel
@@ -59,13 +58,11 @@ function buildMetadata(sample) {
         });
     };
 };
-  // buildMetadata();
+  
 
 //###################################################################################
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
+  //######### Build Charts ###############
 
- 
  // Use `d3.json` to fetch the sample data for the plots
  function buildCharts(sample) {
       var url_sample = `/samples/${sample}`;
@@ -83,26 +80,36 @@ function buildMetadata(sample) {
             "type":"pie",
             "hoverinfo":'response.otu_labels.slice(0,10) + percent'
           }];
+          console.log(data_pie);
           var layout_pie = {
             height: 500,
             width: 600
           };
           Plotly.newPlot("pie",data_pie,layout_pie);
 
+         
           // Build a bubble Chart
           var data_bubble = [{
             "x": response.otu_ids,
-            "y": response.samples_values,
+            "y": response.sample_values,
             "mode":"markers",
-            "marker":{"size":response.samples_values,
-                      "color":response.otu_ids
+            "marker":{
+                      "size": response.sample_values.map(d=>d*10),
+                      "sizemode":"area",
+                      "color":response.otu_ids,
+                      "colorscale": "Earth"
                     },
             "text":response.otu_labels,
-            "type":"scatter"
           }];
+          console.log(data_bubble);
           var layout_bubble = {
-            height: 800,
-            width: 1500
+            // height: 800,
+            // width: 1500,
+            hovermode: 'closest',
+            xaxis: { title: 'OTU ID',
+                      autorange: true },
+            yaxis: { title: 'Sample Values',
+                      autorange: true }
           };
           Plotly.newPlot("bubble",data_bubble,layout_bubble);
 
@@ -114,6 +121,12 @@ function buildMetadata(sample) {
 
  };
 
-  // buildCharts();
-//####################################################################################
-  
+
+
+
+
+// ##############################################################################
+
+// Initialize the dashboard
+init();
+ 
